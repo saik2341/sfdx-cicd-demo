@@ -1,0 +1,41 @@
+name: Salesforce CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf --version
+
+      - name: Write JWT private key to file
+        run: echo "${{ secrets.SFDX_JWT_KEY }}" > server.key
+
+      - name: Authenticate to Salesforce
+        run: |
+          sf org login jwt \
+            --client-id ${{ secrets.SFDX_CONSUMER_KEY }} \
+            --jwt-key-file server.key \
+            --username ${{ secrets.SFDX_HUB_USERNAME }} \
+            --alias TargetOrg \
+            --set-default
+
+      - name: Deploy source to org
+        run: sf project deploy start --source-dir force-app --target-org TargetOrg --wait 10
+
+      - name: Run Apex tests
+        run: sf apex run test --target-org TargetOrg --class-names HelloWorldTest --code-coverage --result-format human --wait 10
+
+      - name: Clean up key file
+        if: always()
+        run: rm -f server.key
