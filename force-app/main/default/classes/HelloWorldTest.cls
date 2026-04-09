@@ -11,4 +11,15 @@ private class HelloWorldTest {
     static void testPersonalGreeting() {
         System.assertEquals('Hello, Krishna!', HelloWorld.sayHello('Krishna'));
     }
+
+    @isTest
+    static void testDefaultFarewell() {
+        System.assertEquals('Goodbye, World!', HelloWorld.sayGoodbye(null));
+        System.assertEquals('Goodbye, World!', HelloWorld.sayGoodbye(''));
+    }
+
+    @isTest
+    static void testPersonalFarewell() {
+        System.assertEquals('Goodbye, Krishna!', HelloWorld.sayGoodbye('Krishna'));
+    }
 }

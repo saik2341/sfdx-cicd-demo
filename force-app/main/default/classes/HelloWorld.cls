@@ -7,6 +7,9 @@ public with sharing class HelloWorld {
     }
 
     public static String sayGoodbye(String name) {
-        return 'Goodbye, ' + nameDoesNotExist + '!';
+        if (String.isBlank(name)) {
+            return 'Goodbye, World!';
+        }
+        return 'Goodbye, ' + name + '!';
     }
 }
