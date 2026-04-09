@@ -5,4 +5,8 @@ public with sharing class HelloWorld {
         }
         return 'Hello, ' + name + '!';
     }
+
+    public static String sayGoodbye(String name) {
+        return 'Goodbye, ' + nameDoesNotExist + '!';
+    }
 }
